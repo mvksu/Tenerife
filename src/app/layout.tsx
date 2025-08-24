@@ -1,5 +1,8 @@
 // FILE: app/layout.tsx
 import "./globals.css";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+
 export const metadata = {
   title: "Interactive Tenerife Planner",
   description: "Leaflet + Next.js + Tailwind",
@@ -10,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pl">
+    <html lang="pl" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>{children}</body>
     </html>
   );
