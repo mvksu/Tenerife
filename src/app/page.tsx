@@ -29,7 +29,7 @@ export default function Page() {
     { name: string; ok: boolean; err?: any }[]
   >([]);
   const [mapStyle, setMapStyle] = React.useState<"OSM" | "CartoLight">(
-    "CartoLight"
+    "OSM"
   );
 
   React.useEffect(() => {
