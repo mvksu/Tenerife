@@ -6,14 +6,17 @@ export function Chip({
   active,
   onClick,
   children,
+  title,
 }: {
   active?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
+  title?: string;
 }) {
   return (
     <button
       onClick={onClick}
+      title={title}
       className={`px-3 py-1 rounded-full text-xs font-medium border transition ${
         active
           ? "bg-black/80 text-white dark:bg-white/90 dark:text-black"

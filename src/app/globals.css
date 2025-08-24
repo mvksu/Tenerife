@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light dark; }
+html, body { height: 100%; }
 
 :root {
   --background: #ffffff;
@@ -24,8 +31,3 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-:root { color-scheme: light dark; }
-html, body { height: 100%; }

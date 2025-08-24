@@ -12,22 +12,35 @@ function escapeHtml(str: string) {
   );
 }
 
+function safeUrl(url?: string) {
+  if (!url) return null;
+  try {
+    // Allow absolute http/https and app-local "/..." paths
+    if (url.startsWith("/")) return url;
+    const u = new URL(url);
+    if (u.protocol === "http:" || u.protocol === "https:") return url;
+    return null;
+  } catch (_) {
+    return null;
+  }
+}
+
 function createTileLayer(L: any, style: string) {
   switch (style) {
     case "Topo":
-      return L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+      return L.tileLayer("https://{s}.tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png", {
         maxZoom: 17,
         attribution: "&copy; OpenTopoMap, &copy; OpenStreetMap",
       });
     case "CartoLight":
       return L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png",
         {
           maxZoom: 19,
           attribution: "&copy; Carto, &copy; OpenStreetMap",
         }
       );
-    default:
+    case "OSM":
       return L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: "&copy; OpenStreetMap contributors",
@@ -85,15 +98,35 @@ export function LeafletMap({
         tl.addTo(map);
         markerByIdRef.current.clear();
         points.forEach((p) => {
+          const cats = (p.cats && p.cats.length)
+            ? `<br/><em>Kategorie: ${escapeHtml(p.cats.join(", "))}</em>`
+            : "";
+          const imgSrc = safeUrl(p.img);
+          const imgHtml = imgSrc
+            ? `<div style="margin:6px 0;"><img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(
+                p.name
+              )}" style="width:220px;height:auto;border-radius:6px;display:block;object-fit:cover"/></div>`
+            : "";
+          const linksHtml = (p.links && p.links.length)
+            ? `<ul style="margin:6px 0 0;padding:0;list-style:none;">${p.links
+                .map((l) => {
+                  const href = safeUrl(l.href);
+                  if (!href) return "";
+                  return `<li style="margin:2px 0;"><a href="${escapeHtml(
+                    href
+                  )}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                    l.label
+                  )}</a></li>`;
+                })
+                .join("")}</ul>`
+            : "";
           const popupHtml = `<strong>${escapeHtml(
             p.name
-          )}</strong><br/>${escapeHtml(
-            p.blurb || ""
-          )}<br/><a href="https://www.google.com/maps/search/?api=1&query=${
+          )}</strong><br/>${escapeHtml(p.blurb || "")}${cats}${imgHtml}<br/><a href="https://www.google.com/maps/search/?api=1&query=${
             p.lat
           },${
             p.lon
-          }" target="_blank" rel="noopener noreferrer">Otwórz w Google Maps</a>`;
+          }" target="_blank" rel="noopener noreferrer">Otwórz w Google Maps</a>${linksHtml}`;
           const m = L.circleMarker([p.lat, p.lon], {
             radius: 6,
             color: "#10b981",
