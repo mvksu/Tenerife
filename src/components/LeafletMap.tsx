@@ -27,14 +27,10 @@ function safeUrl(url?: string) {
 
 function createTileLayer(L: any, style: string) {
   switch (style) {
-    case "Topo":
-      return L.tileLayer("https://{s}.tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png", {
-        maxZoom: 17,
-        attribution: "&copy; OpenTopoMap, &copy; OpenStreetMap",
-      });
+
     case "CartoLight":
       return L.tileLayer(
-        "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png",
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
         {
           maxZoom: 19,
           attribution: "&copy; Carto, &copy; OpenStreetMap",
